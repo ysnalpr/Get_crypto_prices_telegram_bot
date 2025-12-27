@@ -39,3 +39,21 @@ def get_top_cryptos():
 		print("Timeout Error:", errt)
 	except requests.exceptions.RequestException as err:
 		print("Something went wrong:", err)
+
+def get_dex_pools(query, include, network, page=1):
+	headers = {"x-cg-pro-api-key": api_key}
+	try:
+		url = f"https://pro-api.coingecko.com/api/v3/onchain/search/pools?query={query}&network={network}&include={include}&page={page}"
+		response = requests.get(url, headers=headers)
+		response.raise_for_status()
+		data = response.json()
+		return data
+	except requests.exceptions.HTTPError as errh:
+		print("Http Error:", errh)
+	except requests.exceptions.ConnectionError as errc:
+		print("Error Connecting:", errc)
+	except requests.exceptions.Timeout as errt:
+		print("Timeout Error:", errt)
+	except requests.exceptions.RequestException as err:
+		print("Something went wrong:", err)
+
