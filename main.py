@@ -12,9 +12,19 @@ bot_token = os.getenv("BOT_TOKEN")
 # This function is for getting a provided crypto's data such as price, market cap, volume and more
 def get_crypto_price(crypto):
 	try:
-		url = f"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids={crypto}&api_key={api_key}"
-		response = requests.get(url)
+		url = f"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&symbols={crypto}"
+		url2 = f"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids={crypto}"
+		url3 = f"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&names={crypto}"
+		headers = {"x-cg-demo-api-key": api_key}
+		response = requests.get(url, headers=headers)
+		if len(response.json()) <= 0:
+			response = requests.get(url2, headers=headers)
+		if len(response.json()) <= 0:
+			response = requests.get(url3, headers=headers)
 		response.raise_for_status()
+		if len(response.json()) == 0:
+			data = "No available coin!"
+			return data
 		data = response.json()[0]
 		return data
 	except requests.exceptions.HTTPError as errh:
@@ -45,18 +55,27 @@ def get_top_cryptos():
 
 # Telegram command to start this bot
 async def start_bot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-	message = "Hey, welcome to Crypto Bot. I can give the real time data for any cryptocurrency. Use /crypto <token-name> to start."
+	message = "Hey, welcome to Crypto Bot. I can give the real time data for any cryptocurrency.\n\n( /crypto btc ) or ( /crypto bitcoin ) or ( /crypto Bitcoin )\n\n/top\n"
 	await update.message.reply_text(message)
 
 # Telegram command to get the data of a crypto token
 # returns these data about a token: (Price, 24h change price and percentage, 24h lowest and highest price, market cap, total volume, total supply, circulating supply)
 async def crypto(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-	crypto_name = update.message.text.split()[1]
-	crypto_data = get_crypto_price(crypto_name)
-	if crypto_data:
-		await update.message.reply_text(f"The current price of {crypto_name} is ${crypto_data['current_price']:,}.\nThe price change in last 24h: ${crypto_data['price_change_24h']:,} | %{crypto_data['price_change_percentage_24h']:,}\nLowest in the last 24h: ${crypto_data['low_24h']:,}\nHighest in the last 24h: ${crypto_data['high_24h']:,}\nMarket cap: ${crypto_data['market_cap']:,}\nLast 24h total volume: ${crypto_data['total_volume']:,}\nTotal supply: {crypto_data['total_supply']:,}\nCirculating supply: {crypto_data['circulating_supply']:,}")
-	else:
-		await update.message.reply_text(f"Sorry, I could not get any available data for {crypto_name}. Please check the token name and try again.")
+	try:
+		response = update.message.text.split(" ")
+		if len(response) <= 1:
+			await update.message.reply_text("Enter a coin name.\n/crypto btc\n/crypto bitcoin\n/crypto Bitcoin")
+		crypto_name = update.message.text.split()[1]
+		crypto_data = get_crypto_price(crypto_name)
+		if crypto_data == "No available coin!":
+			await update.message.reply_text(
+				f"Sorry, I could not get any available data for [ {crypto_name} ]. Please check the token name and try again.")
+		if crypto_data:
+			await update.message.reply_text(f"The current price of [ {crypto_name} ] is ${crypto_data['current_price']:,}.\nThe price change in last 24h: ${crypto_data['price_change_24h']:,} | %{crypto_data['price_change_percentage_24h']:,}\nLowest in the last 24h: ${crypto_data['low_24h']:,}\nHighest in the last 24h: ${crypto_data['high_24h']:,}\nMarket cap: ${crypto_data['market_cap']:,}\nLast 24h total volume: ${crypto_data['total_volume']:,}\nTotal supply: {crypto_data['total_supply']:,}\nCirculating supply: {crypto_data['circulating_supply']:,}")
+		else:
+			await update.message.reply_text(f"Sorry, I could not get any available data for [ {crypto_name} ]. Please check the token name and try again.")
+	except Exception as e:
+		print("telegram:", e)
 
 # Telegram command to get top 10 crypto
 async def top_cryptocurrencies(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
