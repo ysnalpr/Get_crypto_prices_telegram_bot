@@ -54,7 +54,7 @@ async def crypto(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 	crypto_name = update.message.text.split()[1]
 	crypto_data = get_crypto_price(crypto_name)
 	if crypto_data:
-		await update.message.reply_text(f"The current price of {crypto_name} is ${crypto_data['current_price']}.\nThe price change in last 24h: ${crypto_data['price_change_24h']} | %{crypto_data['price_change_percentage_24h']}\nLowest in the last 24h: ${crypto_data['low_24h']}\nHighest in the last 24h: ${crypto_data['high_24h']}\nMarket cap: ${crypto_data['market_cap']}\nLast 24h total volume: ${crypto_data['total_volume']}\nTotal supply: {crypto_data['total_supply']}\nCirculating supply: {crypto_data['circulating_supply']}")
+		await update.message.reply_text(f"The current price of {crypto_name} is ${crypto_data['current_price']:,}.\nThe price change in last 24h: ${crypto_data['price_change_24h']:,} | %{crypto_data['price_change_percentage_24h']:,}\nLowest in the last 24h: ${crypto_data['low_24h']:,}\nHighest in the last 24h: ${crypto_data['high_24h']:,}\nMarket cap: ${crypto_data['market_cap']:,}\nLast 24h total volume: ${crypto_data['total_volume']:,}\nTotal supply: {crypto_data['total_supply']:,}\nCirculating supply: {crypto_data['circulating_supply']:,}")
 	else:
 		await update.message.reply_text(f"Sorry, I could not get any available data for {crypto_name}. Please check the token name and try again.")
 
@@ -64,7 +64,7 @@ async def top_cryptocurrencies(update: Update, context: ContextTypes.DEFAULT_TYP
 	if data:
 		message = 'Here is the top 10 cryptocurrencies:\n'
 		for number, token in enumerate(data, start=1):
-			message += f"{number}. [{token['name']}] ( {token['symbol'].upper()} ):\n- Current price: ${token['current_price']}\n- Market cap: ${token['market_cap']}\n- Total volume in last 24h: ${token['total_volume']}\n\n"
+			message += f"{number}. [{token['name']}] ( {token['symbol'].upper()} ):\n- Current price: ${token['current_price']:,}\n- Market cap: ${token['market_cap']:,}\n- Total volume in last 24h: ${token['total_volume']:,}\n\n"
 		await update.message.reply_text(message, parse_mode='Markdown')
 	else:
 		await update.message.reply_text(f"Sorry, I could not get any available data for top 10 cryptocurrency. Try again later.")
