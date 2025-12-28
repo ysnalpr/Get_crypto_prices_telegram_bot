@@ -1,6 +1,6 @@
 # Get Crypto price with Telegram bot
 
-![start](2.JPG) | ![crypto](2.JPG) | ![top](3.JPG) | ![empty command](3.JPG)
+![start width="190"](2.JPG) | ![crypto width="190"](2.JPG) | ![top width="190"](3.JPG) | ![empty command width="190"](3.JPG)
 
 This is a simple **Telegram bot** using Python that delivers **real-time updates on cryptocurrencies**.
 
