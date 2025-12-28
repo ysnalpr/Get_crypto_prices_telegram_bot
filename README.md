@@ -1,9 +1,5 @@
 # Get Crypto price with Telegram bot
 
-<img src="1.JPG" width="200">
-<img src="2.JPG" width="200">
-<img src="3.JPG" width="200">
-<img src="3.JPG" width="200">
 This is a simple **Telegram bot** using Python that delivers **real-time updates on cryptocurrencies**.
 
 > It can deliver: **Price**, **24h change price and percentage**, **24h lowest** and **highest price**, **market cap**, **total volume**, **total supply**, **circulating supply**
@@ -43,6 +39,12 @@ $ python main.py
 ## Contributing
 
 **Pull requests are welcome.**
+
+## Images 
+<img src="1.JPG" width="200">
+<img src="2.JPG" width="200">
+<img src="3.JPG" width="200">
+<img src="3.JPG" width="200">
 
 ## License
 
